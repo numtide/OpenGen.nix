@@ -10,9 +10,6 @@
 
     genjax.url = "github:probcomp/genjax?ref=v0.1.1";
     genjax.flake = false;
-
-    poetry2nix.url = "github:nix-community/poetry2nix";
-    poetry2nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   nixConfig.extra-substituters = [ "https://numtide.cachix.org" ];
@@ -37,52 +34,18 @@
       # apps, and devshells are per system.
       perSystem = { config, self', inputs', pkgs, system, ... }:
       let
-        sppl = pkgs.callPackage ./pkgs/sppl {};
-
         ociImgBase = pkgs.callPackage ./pkgs/ociBase {
           inherit nixpkgs;
           basicTools = self.lib.basicTools;
         };
         
-        poetry2nix = inputs.poetry2nix.lib.mkPoetry2Nix { inherit pkgs; };
-
-        scopes = (self.lib.mkScopes {
-          inherit pkgs internalPackages inputs poetry2nix;
-          basicTools = self.lib.basicTools;
-        });
-        loom = scopes.callPy3Package ./pkgs/loom { };
-
-        # TODO: make this cleaner
-        bayes3d = self'.legacyPackages.python3Packages.bayes3d;
-        open3d = scopes.callPy3Package ./pkgs/python-modules/open3d { };
-
-        internalPackages = {
-          #jaxlib = scopes.callPy3Package ./pkgs/jaxlib { };
-          #jax = scopes.callPy3Package ./pkgs/jax { };
-          jaxtyping = scopes.callPy3Package ./pkgs/jaxtyping { };
-          tinygltf = scopes.callPackage ./pkgs/tinygltf { };
-          PoissonRecon = scopes.callPackage ./pkgs/PoissonRecon { };
-          goftests = scopes.callPackage ./pkgs/goftests { };
-          parsable = scopes.callPackage ./pkgs/parsable { };
-          pymetis = scopes.callPackage ./pkgs/pymetis { };
-          distributions = scopes.callPackage ./pkgs/distributions { };
-          genjax = scopes.callPy3Package ./pkgs/genjax { };
-          distinctipy = scopes.callPy3Package ./pkgs/distinctipy { };
-          pyransac3d = scopes.callPy3Package ./pkgs/pyransac3d { };
-          opencv-python = scopes.callPy3Package ./pkgs/opencv-python { };
-          oryx = scopes.callPy3Package ./pkgs/oryx { };
-          plum-dispatch = scopes.callPy3Package ./pkgs/plum-dispatch { };
-        } // packages;
-
         packages = {
-          inherit
+          inherit ociImgBase;
+
+          inherit (self'.legacyPackages.python3Packages)
             loom
             sppl
-
-            ociImgBase
-
             bayes3d
-            open3d
             ;
         };
 
@@ -159,7 +122,7 @@
             export EXTRA_LDFLAGS="-L/lib -L${pkgs.linuxPackages.nvidia_x11}/lib"
             export EXTRA_CCFLAGS="-I/usr/include"
             export CUDA_PATH=${pkgs.cudatoolkit_11}
-            export B3D_ASSET_PATH="${bayes3d.src}/assets"
+            export B3D_ASSET_PATH="${packages.bayes3d.src}/assets"
 
             jupyter notebook
           '';
