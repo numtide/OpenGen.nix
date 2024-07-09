@@ -133,6 +133,8 @@
 
         inherit packages;
 
+        checks = packages;
+
         legacyPackages.python3Packages = 
         (pkgs.python311Packages.overrideScope pythonOverrides).overrideScope (super: superPython:
           loadPackages super.callPackage ./pkgs/python-modules
