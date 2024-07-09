@@ -114,6 +114,13 @@
           # Use the pre-built version of libjax
           libjax = final.libjax-bin;
         };
+
+        devshellPython = (self'.legacyPackages.python3Packages.python.withPackages (p: [
+          self'.legacyPackages.python3Packages.bayes3d
+          self'.legacyPackages.python3Packages.jax
+          p.jupyter
+          p.scipy
+        ]));
       in {
         _module.args.pkgs = import inputs.nixpkgs {
           inherit system;
@@ -133,7 +140,9 @@
 
         inherit packages;
 
-        checks = packages;
+        checks = packages // {
+          inherit devshellPython;
+        };
 
         legacyPackages.python3Packages = 
         (pkgs.python311Packages.overrideScope pythonOverrides).overrideScope (final: prev:
@@ -143,12 +152,7 @@
         devShells.default = pkgs.mkShell {
           packages = [
             self'.legacyPackages.python3Packages.python-lsp-server
-            (self'.legacyPackages.python3Packages.python.withPackages (p: [
-              self'.legacyPackages.python3Packages.bayes3d
-              self'.legacyPackages.python3Packages.jax
-              p.jupyter
-              p.scipy
-            ]))
+            devshellPython
           ];
 
           shellHook = ''
