@@ -99,20 +99,20 @@
 
         # For fixing existing packages that live in nixpkgs
         # TODO: put in separate file
-        pythonOverrides = super: pythonSuper: {
+        pythonOverrides = final: prev: {
           # so we can pull from flake inputs
           inherit inputs;
 
           # FIXME: I don't think this is working as expected. Better to change nixpkgs wthfor now.
 
           # Use the pre-built version of tensorflow
-          tensorflow = pythonSuper.tensorflow-bin;
+          tensorflow = final.tensorflow-bin;
 
           # Use the pre-built version of jaxlib
-          jaxlib = super.jaxlib-bin;
+          jaxlib = final.jaxlib-bin;
 
           # Use the pre-built version of libjax
-          libjax = super.libjax-bin;
+          libjax = final.libjax-bin;
         };
       in {
         _module.args.pkgs = import inputs.nixpkgs {
@@ -136,8 +136,8 @@
         checks = packages;
 
         legacyPackages.python3Packages = 
-        (pkgs.python311Packages.overrideScope pythonOverrides).overrideScope (super: superPython:
-          loadPackages super.callPackage ./pkgs/python-modules
+        (pkgs.python311Packages.overrideScope pythonOverrides).overrideScope (final: prev:
+          loadPackages final.callPackage ./pkgs/python-modules
         );
 
         devShells.default = pkgs.mkShell {
