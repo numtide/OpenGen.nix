@@ -1,12 +1,13 @@
-{
-  fetchFromGitHub,
-  callPackage,
-  fetchPypi,
-  eigen,
-  parsable,
-  goftests,
-  protobuf3_20,
-  python3Packages,
+{ lib
+, stdenv
+, fetchFromGitHub
+, callPackage
+, fetchPypi
+, eigen
+, parsable
+, goftests
+, protobuf3_20
+, python3Packages
 }:
 let
   version = "2.2.1";
@@ -88,7 +89,9 @@ python3Packages.buildPythonPackage {
 
   patches = [
     ./use-imread-instead-of-scipy.patch
-  ];
+  ] ++ (lib.optionals stdenv.isDarwin [
+    ./gnu-sed-on-darwin.patch
+  ]);
 
   env.DISTRIBUTIONS_USE_PROTOBUF = 1;
 
