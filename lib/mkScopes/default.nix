@@ -1,4 +1,4 @@
-{ pkgs, basicTools, internalPackages, poetry2nix, inputs }:
+{ pkgs, basicTools, internalPackages, inputs }:
 let
   callPackage = pkgs.newScope (
     pkgs
@@ -7,7 +7,6 @@ let
         callPackage
         callPy3Package
         inputs
-        poetry2nix
         ;
       basicTools = basicTools pkgs;
     }
@@ -22,7 +21,6 @@ let
         callPackage
         callPy3Package
         inputs
-        poetry2nix
         ;
       basicTools = basicTools pkgs;
     }
