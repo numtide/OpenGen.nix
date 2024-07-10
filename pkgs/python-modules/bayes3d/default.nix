@@ -1,5 +1,6 @@
 {
   lib,
+  stdenv,
   fetchFromGitHub,
   buildPythonPackage,
   cudaPackages_11,
@@ -14,6 +15,7 @@
   opencv-python,
   setuptools,
   setuptools-scm,
+  torch,
   pytorchWithCuda,
   graphviz,
   imageio,
@@ -66,21 +68,15 @@ buildPythonPackage rec {
     setuptools
     setuptools-scm
     which
-    #breakpointHook
   ];
 
   buildInputs = [
-    # cudaPackages.cuda_nvcc
-    # cudaPackages.cuda_cudart
-    # cudaPackages.libcusparse
-    # cudaPackages.cuda_cccl
-    # cudaPackages.libcublas
-    # cudaPackages.libcusolver
-    cudaPackages_11.cudatoolkit.lib
-    pytorchWithCuda
     libglvnd
     libGLU
-  ];
+  ]
+  ++ (lib.optionals stdenv.isLinux [
+    cudaPackages_11.cudatoolkit.lib
+  ]);
 
   propagatedBuildInputs = [
     distinctipy
@@ -98,15 +94,18 @@ buildPythonPackage rec {
     pyransac3d
     tensorflow-probability
     timm
-    #torch
     trimesh
-  ];
+  ]
+  ++ (lib.optionals stdenv.isLinux [
+    pytorchWithCuda
+  ])
+  ++ (lib.optionals stdenv.isDarwin [
+    torch
+  ]);
 
-  preBuild = ''
+  preBuild = "" + (lib.optionalString stdenv.isLinux ''
     export CUDA_HOME=${cuda-native-redist}
-  '';
-
-  #preferLocalBuild = true;
+  '');
 
   pythonImportsCheck = [ "bayes3d" ];
 }
