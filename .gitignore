@@ -1,3 +1,4 @@
 result
 result-*
 .ipynb_checkpoints/
+.envrc.local
