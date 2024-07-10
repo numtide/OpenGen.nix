@@ -36,6 +36,13 @@
       sha256 = "sha256-hFIR073wDRXyt8EqFkLZNDdGUjPTyWYOfDg5eGTjvz0=";
     };
 
+    patches = [
+      (pkgs.fetchpatch {
+        url = "https://patch-diff.githubusercontent.com/raw/probsys/sppl/pull/129.diff";
+        hash = "sha256-UkW3131ZeJHdrPJiAIqN4j/YkbRoNzbzJPhDxawBNy4=";
+      })
+    ];
+
     propagatedBuildInputs = [
       astunparse
       numpy
