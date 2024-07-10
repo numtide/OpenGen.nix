@@ -31,6 +31,11 @@ let
   version = "0.23.0";
   pname = "tensorflow-probability";
 
+  fetchAttrsBySystem = {
+    "x86_64-linux" = "sha256-TbWcWYidyXuAMgBnO2/k0NKCzc4wThf2uUeC3QxdBJY=";
+    "aarch64-darwin" = "sha256-xgpC3aU6sGPZFNT6HgHFMKLA+Zxw/Ue1zZ5tjreIjkQ=";
+  };
+
   inherit (darwin) cctools;
 
   # first build all binaries and generate setup.py using bazel
@@ -57,7 +62,11 @@ let
     LIBTOOL = lib.optionalString stdenv.isDarwin "${cctools}/bin/libtool";
 
     fetchAttrs = {
-      sha256 = "sha256-TbWcWYidyXuAMgBnO2/k0NKCzc4wThf2uUeC3QxdBJY=";
+      sha256 = if builtins.hasAttr stdenv.system fetchAttrsBySystem then
+        fetchAttrsBySystem.${stdenv.system}
+      else
+        throw "No hash for system"
+      ;
     };
 
     buildAttrs = {
