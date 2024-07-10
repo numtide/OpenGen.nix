@@ -58,10 +58,18 @@
             basicTools = self.lib.basicTools;
           };
 
-          packages = {
+          packages = rec {
             inherit ociImgBase;
 
             inherit (self'.legacyPackages.python3Packages) loom sppl bayes3d;
+
+            loomOCI = pkgs.dockerTools.buildLayeredImage {
+              name = "probcomp/loom";
+              contents =
+                [ loom pkgs.bashInteractive ] ++
+                (self.lib.basicTools pkgs)
+              ;
+            };
           };
 
           loadPackages =
