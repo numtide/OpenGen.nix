@@ -11,7 +11,7 @@
     gensqlquery.url = "github:OpenGen/GenSQL.query";
   };
 
-  outputs = inputs@{ self, nixpkgs, flake-parts, opengen, gensqlquery, ... }:
+  outputs = inputs@{ nixpkgs, flake-parts, opengen, gensqlquery, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         # To import a flake module
@@ -26,7 +26,7 @@
       # NOTE: This property is consumed by flake-parts.mkFlake to specify outputs of
       # the flake that are replicated for each supported system. Typically packages,
       # apps, and devshells are per system.
-      perSystem = { config, self', inputs', pkgs, system, ... }:
+      perSystem = { pkgs, system, ... }:
       let
         toolkit = opengen.lib.basicTools pkgs;
         sppl = opengen.packages.${system}.sppl;

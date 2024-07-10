@@ -37,7 +37,7 @@
       # NOTE: This property is consumed by flake-parts.mkFlake to specify outputs of
       # the flake that are replicated for each supported system. Typically packages,
       # apps, and devshells are per system.
-      perSystem = { config, self', inputs', pkgs, system, ... }:
+      perSystem = { config, self', pkgs, system, ... }:
       let
         ociImgBase = pkgs.callPackage ./pkgs/ociBase {
           inherit nixpkgs;
@@ -67,7 +67,7 @@
 
         # For fixing existing packages that live in nixpkgs
         # TODO: put in separate file
-        pythonOverrides = final: prev: {
+        pythonOverrides = final: _prev: {
           # so we can pull from flake inputs
           inherit inputs;
 
@@ -96,7 +96,7 @@
             cudaSupport = (system == "x86_64-linux" || system == "aarch64-linux");
           };
           overlays = [
-            (final: prev: {
+            (_final: _prev: {
               # FIXME: say why this was added.
               inherit (inputs.nixpkgs-llvm-10.legacyPackages.${system}) llvmPackages_10;
             })
@@ -110,7 +110,7 @@
         };
 
         legacyPackages.python3Packages = 
-        (pkgs.python311Packages.overrideScope pythonOverrides).overrideScope (final: prev:
+        (pkgs.python311Packages.overrideScope pythonOverrides).overrideScope (final: _prev:
           loadPackages final.callPackage ./pkgs/python-modules
         );
 

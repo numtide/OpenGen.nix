@@ -2,9 +2,6 @@
 , lib
 , pkgs
 , fetchPypi
-, fetchurl
-
-, tree
 , unzip
 , zip
 
@@ -50,7 +47,6 @@ let
 
   version = "0.18.0";
   pname = "open3d";
-  pythonAbi = "cp311";
 
   prebuiltSrcs = {
     "3.8-x86_64-linux" = {

@@ -6,7 +6,6 @@
 }: let
   # in OCI context, whatever our host platform we want to build same arch but linux
   systemWithLinux = builtins.replaceStrings [ "darwin" ] [ "linux" ] system;
-  crossPkgsLinux = nixpkgs.legacyPackages.${systemWithLinux};
 
   base = opengen.packages.${system}.ociImgBase;
   ociBin = gensqlquery.packages.${systemWithLinux}.bin;

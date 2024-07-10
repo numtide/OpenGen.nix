@@ -2,20 +2,9 @@
 , stdenv
 , buildPythonPackage
 , fetchurl
-, fetchPypi
 , autoPatchelfHook
 
-, unzip
-, zip
-
-, git
-, cmake
 , numpy
-, pip
-, scikit-build
-, setuptools
-, wheel
-, gcc
 , libGL
 , xorg
 , libz
@@ -26,8 +15,6 @@
 let
   version = "4.10.0.84";
   pname = "opencv-python";
-  pythonAbi = "cp311";
-  pythonPlatform = "manylinux_2_27_x86_64";
 
   wheelUrls = {
     "x86_64-linux" = {

@@ -1,6 +1,5 @@
 { lib
 , fetchFromGitHub
-, breakpointHook
 , buildPythonPackage
 , cudaPackages_11
 , which
@@ -14,7 +13,6 @@
 , opencv-python
 , setuptools
 , setuptools-scm
-, torch
 , pytorchWithCuda
 , graphviz
 , imageio

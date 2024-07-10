@@ -1,9 +1,7 @@
 { buildPythonPackage
-, fetchFromGitHub
 , inputs
 , poetry-core
 , poetry-dynamic-versioning
-, fetchPypi
 , stdenv
 , beartype
 , deprecated

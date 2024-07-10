@@ -8,8 +8,6 @@
 
     crossPkgsLinux = nixpkgs.legacyPackages.${systemWithLinux};
 
-    basicToolsFn = import ./../../../lib/basic.nix;
-
     baseImg = pkgs.dockerTools.buildLayeredImage {
       name = "probcomp/nix-base";
       tag = systemWithLinux;

@@ -1,5 +1,4 @@
 { fetchFromGitHub
-, python3
 , buildPythonPackage
 , setuptools
 , wheel

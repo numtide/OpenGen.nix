@@ -1,5 +1,4 @@
 { pkgs
-, system
 , buildPythonPackage
 
 , astunparse

@@ -13,7 +13,6 @@
 , numpy
 , pandas
 , pep8
-, pkgs
 , protobuf3_20
 , pyflakes
 , python3Packages
@@ -82,7 +81,7 @@ let
     '';
   };
 
-  contextlib2_ = contextlib2.overrideAttrs (final: prev: {
+  contextlib2_ = contextlib2.overrideAttrs (_final: _prev: {
     # https://github.com/jazzband/contextlib2/pull/52
     # updated to support Python3
     src = fetchFromGitHub {
