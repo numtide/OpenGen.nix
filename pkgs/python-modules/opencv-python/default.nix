@@ -10,8 +10,6 @@
   xorg,
   libz,
   qt5,
-
-  breakpointHook,
 }:
 let
   version = "4.10.0.84";
@@ -46,22 +44,13 @@ let
       throw "Unsupported system"
   );
 in
-buildPythonPackage rec {
+buildPythonPackage {
   inherit pname version;
   format = "wheel";
 
   inherit src;
 
-  #patchPhase = ''
-  #pwd
-
-  #${unzip}/bin/unzip $src/${pname}-${version}-${pythonAbi}-${pythonAbi}-${pythonPlatform}.whl -d tmp
-  #cd tmp
-  #${zip}/bin/zip -0 -r ../dist/${pname}-${version}-${pythonAbi}-${pythonAbi}-${pythonPlatform}.whl ./*
-  #cd ../
-  #'';
-
-  nativeBuildInputs = [ breakpointHook ] ++ lib.optionals stdenv.isLinux [ autoPatchelfHook ];
+  nativeBuildInputs = lib.optionals stdenv.isLinux [ autoPatchelfHook ];
 
   dontWrapQtApps = true;
 
