@@ -3,6 +3,8 @@
   cmake,
   eigen,
   protobuf3_20,
+  pyflakes,
+
   src, version
 }:
 stdenv.mkDerivation {
@@ -10,7 +12,7 @@ stdenv.mkDerivation {
 
   inherit version src;
 
-  nativeBuildInputs = [ cmake ];
+  nativeBuildInputs = [ cmake pyflakes ];
   buildInputs = [eigen protobuf3_20 ];
 
   env.DISTRIBUTIONS_USE_PROTOBUF = 1;
