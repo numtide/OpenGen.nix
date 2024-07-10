@@ -1,36 +1,39 @@
-{
-  stdenv,
-  lib,
-  pkgs,
-  fetchPypi,
-  unzip,
-  zip,
+{ stdenv
+, lib
+, pkgs
+, fetchPypi
+, unzip
+, zip
 
-  autoPatchelfHook,
-  python,
-  tensorflow-bin,
-  libusb,
-  cudaPackages_11,
-  buildPythonPackage,
-  ipywidgets,
-  matplotlib,
-  numpy,
-  pandas,
-  plyfile,
-  pytorchWithCuda,
-  pyyaml,
-  scikitlearn,
-  scipy,
-  tqdm,
+, autoPatchelfHook
+, python
+, tensorflow-bin
+, libusb
+, cudaPackages_11
+, buildPythonPackage
+, ipywidgets
+, matplotlib
+, numpy
+, pandas
+, plyfile
+, torch
+, pytorchWithCuda
+, pyyaml
+, scikitlearn
+, scipy
+, tqdm
+, plotly
+, dash
+, addict
 
-  libGL,
-  libglvnd,
-  libdrm,
-  expat,
-  xorg,
-  llvmPackages_10,
-  buildEnv,
-  runCommand,
+, libGL
+, libglvnd
+, libdrm
+, expat
+, xorg
+, llvmPackages_10
+, buildEnv
+, runCommand
 }:
 let
   libllvm-wrapped =
@@ -89,7 +92,7 @@ let
       hash = "";
     };
     "3.9-aarch64-darwin" = {
-      platform = "macosx_13_0_aarch64";
+      platform = "macosx_13_0_arm64";
       dist = "cp39";
       hash = "";
     };
@@ -110,7 +113,7 @@ let
       hash = "";
     };
     "3.10-aarch64-darwin" = {
-      platform = "macosx_13_0_aarch64";
+      platform = "macosx_13_0_arm64";
       dist = "cp310";
       hash = "";
     };
@@ -131,9 +134,9 @@ let
       hash = "";
     };
     "3.11-aarch64-darwin" = {
-      platform = "macosx_13_0_aarch64";
+      platform = "macosx_13_0_arm64";
       dist = "cp311";
-      hash = "";
+      hash = "sha256-IYK4GNzTKQ3S3bACGtBFO/2pkJjJMdWy/GNqNByzynA=";
     };
   };
 
@@ -156,7 +159,6 @@ buildPythonPackage {
   inherit pname version;
   format = "wheel";
 
-  # TODO: make this multiplatform
   inherit src;
 
   patchPhase = ''
@@ -168,26 +170,33 @@ buildPythonPackage {
     cd ../
   '';
 
-  nativeBuildInputs = [ autoPatchelfHook ];
+  nativeBuildInputs = [ ]
+  ++ (lib.optionals stdenv.isLinux [
+    autoPatchelfHook
+  ]);
 
   buildInputs = [
     # so deps
     stdenv.cc.cc.lib
     libusb.out
-    pytorchWithCuda
     tensorflow-bin
-    cudaPackages_11.cudatoolkit.lib
-    #cudaPackages_11.cuda_cudart.lib
     libGL
     libglvnd
-    libdrm
     expat
     xorg.libXxf86vm
     xorg.libXfixes
     libllvm-wrapped
     pkgs.mesa
     pkgs.zstd
-  ];
+  ]
+  ++ (lib.optionals stdenv.isLinux [
+    libdrm
+    pytorchWithCuda
+    cudaPackages_11.cudatoolkit.lib
+  ])
+  ++ (lib.optionals stdenv.isDarwin [
+    torch
+  ]);
 
   propagatedBuildInputs = [
     # py deps
@@ -199,20 +208,23 @@ buildPythonPackage {
     scipy
     scikitlearn
     numpy
-    #addict
     matplotlib
+    plotly
+    dash
+    addict
   ];
 
-  #preBuild = ''
-  #mkdir $out
-  #'';
+  pythonImportsCheck = [
+    "open3d"
+  ];
 
   preFixup = ''
     echo "OUTPUT TO: $out"
     cd $out/lib/python3.*/site-packages/open3d
-    rm libGL.so.1 libEGL.so.1
+
+    ${lib.optionalString stdenv.isLinux "rm libGL.so.1 libEGL.so.1"}
+
     ln -s ${libGL}/lib/libGL.so.1 libGL.so.1
     ln -s ${libGL}/lib/libEGL.so.1 libEGL.so.1
-    #exit 1
   '';
 }
