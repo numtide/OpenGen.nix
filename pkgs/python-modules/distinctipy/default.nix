@@ -1,7 +1,8 @@
-{ fetchPypi
-, buildPythonPackage
-, setuptools
-, numpy
+{
+  fetchPypi,
+  buildPythonPackage,
+  setuptools,
+  numpy,
 }:
 buildPythonPackage rec {
   pname = "distinctipy";
@@ -15,12 +16,7 @@ buildPythonPackage rec {
 
   doCheck = false;
 
-  nativeBuildInputs = [
-    setuptools
-  ];
+  nativeBuildInputs = [ setuptools ];
 
-  propagatedBuildInputs = [
-    numpy
-  ];
+  propagatedBuildInputs = [ numpy ];
 }
-

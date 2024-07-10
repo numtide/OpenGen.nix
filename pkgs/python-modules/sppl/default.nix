@@ -1,26 +1,28 @@
-{ pkgs
-, buildPythonPackage
+{
+  pkgs,
+  buildPythonPackage,
 
-, astunparse
-, numpy
-, scipy
-, sympy
+  astunparse,
+  numpy,
+  scipy,
+  sympy,
 
-, coverage
-, pytest
-, pytestCheckHook
-, pytest-timeout
-}: let
+  coverage,
+  pytest,
+  pytestCheckHook,
+  pytest-timeout,
+}:
+let
   # FIXME: check if we still need python 3.9. Can it be switched to 3.11?
 
   # relies on specific versions of deps that are no longer present in
   # nixpkgs stable; we must checkout a specific SHA
   #nixpkgs-sppl = import (pkgs.fetchFromGitHub {
-      #owner = "nixos";
-      #repo = "nixpkgs";
-      #rev = "994df04c3c700fe9edb1b69b82ba3c627e5e04ff";
-      #sha256 = "sha256-60hLkFqLRI+5XEeacXaVPHdl6m/P8rN2L4luLGxklqs=";
-    #}) {inherit system;};
+  #owner = "nixos";
+  #repo = "nixpkgs";
+  #rev = "994df04c3c700fe9edb1b69b82ba3c627e5e04ff";
+  #sha256 = "sha256-60hLkFqLRI+5XEeacXaVPHdl6m/P8rN2L4luLGxklqs=";
+  #}) {inherit system;};
   #pypkgs = nixpkgs-sppl.python39Packages;
 
   sppl = buildPythonPackage rec {
@@ -56,7 +58,10 @@
       pytest-timeout
     ];
 
-    pytestFlagsArray = [ "--pyargs" "sppl" ];
+    pytestFlagsArray = [
+      "--pyargs"
+      "sppl"
+    ];
 
     pipInstallFlags = [ "--no-deps" ];
 
@@ -64,4 +69,5 @@
     passthru.checkInputs = checkInputs;
   };
 
-in sppl
+in
+sppl

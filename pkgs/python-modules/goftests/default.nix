@@ -15,7 +15,10 @@ buildPythonPackage rec {
     hash = "sha256-5s0NugSus2TuZIInesCNJNAtxEHnZLQIjn0pxGgwL/o=";
   };
 
-  buildInputs = [ numpy scipy ];
+  buildInputs = [
+    numpy
+    scipy
+  ];
 
   doCheck = false;
 

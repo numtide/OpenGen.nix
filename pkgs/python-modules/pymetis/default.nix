@@ -1,6 +1,7 @@
-{ fetchPypi
-, buildPythonPackage
-, pybind11
+{
+  fetchPypi,
+  buildPythonPackage,
+  pybind11,
 }:
 buildPythonPackage rec {
   pname = "PyMetis";
@@ -14,7 +15,5 @@ buildPythonPackage rec {
 
   doCheck = false;
 
-  nativeBuildInputs = [
-    pybind11
-  ];
+  nativeBuildInputs = [ pybind11 ];
 }

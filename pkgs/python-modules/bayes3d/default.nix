@@ -1,55 +1,56 @@
-{ lib
-, fetchFromGitHub
-, buildPythonPackage
-, cudaPackages_11
-, which
-, libglvnd
-, libGLU
-, open3d
-, symlinkJoin
-, genjax
-, distinctipy
-, pyransac3d
-, opencv-python
-, setuptools
-, setuptools-scm
-, pytorchWithCuda
-, graphviz
-, imageio
-, matplotlib
-, meshcat
-, natsort
-, opencv4
-, plyfile
-, liblzfse
-, tensorflow-probability
-, timm
-, trimesh
+{
+  lib,
+  fetchFromGitHub,
+  buildPythonPackage,
+  cudaPackages_11,
+  which,
+  libglvnd,
+  libGLU,
+  open3d,
+  symlinkJoin,
+  genjax,
+  distinctipy,
+  pyransac3d,
+  opencv-python,
+  setuptools,
+  setuptools-scm,
+  pytorchWithCuda,
+  graphviz,
+  imageio,
+  matplotlib,
+  meshcat,
+  natsort,
+  opencv4,
+  plyfile,
+  liblzfse,
+  tensorflow-probability,
+  timm,
+  trimesh,
 }:
 let
   rev = "8113f643a7ba084e0ca2288cf06f95a23e39d1c7";
 
-   cuda-common-redist = with cudaPackages_11; [
-     cuda_cccl # <thrust/*>
-     libcublas # cublas_v2.h
-     libcurand
-     libcusolver # cusolverDn.h
-     libcusparse # cusparse.h
-   ];
-  
-   cuda-native-redist = symlinkJoin {
-     name = "cuda-native-redist-${cudaPackages_11.cudaVersion}";
-     paths =
-       with cudaPackages_11;
-       [
-         cuda_cudart # cuda_runtime.h cuda_runtime_api.h
-         cuda_nvcc
-       ]
-       ++ cuda-common-redist;
-   };
+  cuda-common-redist = with cudaPackages_11; [
+    cuda_cccl # <thrust/*>
+    libcublas # cublas_v2.h
+    libcurand
+    libcusolver # cusolverDn.h
+    libcusparse # cusparse.h
+  ];
+
+  cuda-native-redist = symlinkJoin {
+    name = "cuda-native-redist-${cudaPackages_11.cudaVersion}";
+    paths =
+      with cudaPackages_11;
+      [
+        cuda_cudart # cuda_runtime.h cuda_runtime_api.h
+        cuda_nvcc
+      ]
+      ++ cuda-common-redist;
+  };
 in
 buildPythonPackage rec {
-  pname   = "bayes3d";
+  pname = "bayes3d";
   version = "0.1.0+${builtins.substring 0 8 rev}";
 
   src = fetchFromGitHub {
@@ -101,13 +102,11 @@ buildPythonPackage rec {
     trimesh
   ];
 
-   preBuild = ''
-     export CUDA_HOME=${cuda-native-redist}
-   '';
+  preBuild = ''
+    export CUDA_HOME=${cuda-native-redist}
+  '';
 
   #preferLocalBuild = true;
 
-  pythonImportsCheck = [
-    "bayes3d"
-  ];
+  pythonImportsCheck = [ "bayes3d" ];
 }

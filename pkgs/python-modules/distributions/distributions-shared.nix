@@ -5,15 +5,22 @@
   protobuf3_20,
   pyflakes,
 
-  src, version
+  src,
+  version,
 }:
 stdenv.mkDerivation {
   pname = "distributions-shared";
 
   inherit version src;
 
-  nativeBuildInputs = [ cmake pyflakes ];
-  buildInputs = [eigen protobuf3_20 ];
+  nativeBuildInputs = [
+    cmake
+    pyflakes
+  ];
+  buildInputs = [
+    eigen
+    protobuf3_20
+  ];
 
   env.DISTRIBUTIONS_USE_PROTOBUF = 1;
 

@@ -1,8 +1,9 @@
-{ fetchFromGitHub
-, buildPythonPackage
-, setuptools
-, wheel
-, numpy
+{
+  fetchFromGitHub,
+  buildPythonPackage,
+  setuptools,
+  wheel,
+  numpy,
 }:
 # TODO: upstream me
 buildPythonPackage rec {
@@ -22,9 +23,7 @@ buildPythonPackage rec {
     wheel
   ];
 
-  propagatedBuildInputs = [
-    numpy
-  ];
+  propagatedBuildInputs = [ numpy ];
 
   pythonImportsCheck = [ "pyransac3d" ];
 }

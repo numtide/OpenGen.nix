@@ -1,16 +1,17 @@
-{ lib
-, stdenv
-, buildPythonPackage
-, fetchurl
-, autoPatchelfHook
+{
+  lib,
+  stdenv,
+  buildPythonPackage,
+  fetchurl,
+  autoPatchelfHook,
 
-, numpy
-, libGL
-, xorg
-, libz
-, qt5
+  numpy,
+  libGL,
+  xorg,
+  libz,
+  qt5,
 
-, breakpointHook
+  breakpointHook,
 }:
 let
   version = "4.10.0.84";
@@ -26,7 +27,7 @@ let
       url = "https://files.pythonhosted.org/packages/81/e4/7a987ebecfe5ceaf32db413b67ff18eb3092c598408862fff4d7cc3fd19b/opencv_python-4.10.0.84-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl";
       hash = "";
     };
-  
+
     "x86_64-darwin" = {
       url = "https://files.pythonhosted.org/packages/64/4a/016cda9ad7cf18c58ba074628a4eaae8aa55f3fd06a266398cef8831a5b9/opencv_python-4.10.0.84-cp37-abi3-macosx_12_0_x86_64.whl";
       hash = "";
@@ -39,9 +40,10 @@ let
   };
 
   src = fetchurl (
-    if builtins.hasAttr stdenv.system wheelUrls
-    then wheelUrls.${stdenv.system}
-    else throw "Unsupported system"
+    if builtins.hasAttr stdenv.system wheelUrls then
+      wheelUrls.${stdenv.system}
+    else
+      throw "Unsupported system"
   );
 in
 buildPythonPackage rec {
@@ -51,46 +53,44 @@ buildPythonPackage rec {
   inherit src;
 
   #patchPhase = ''
-    #pwd
+  #pwd
 
-    #${unzip}/bin/unzip $src/${pname}-${version}-${pythonAbi}-${pythonAbi}-${pythonPlatform}.whl -d tmp
-    #cd tmp
-    #${zip}/bin/zip -0 -r ../dist/${pname}-${version}-${pythonAbi}-${pythonAbi}-${pythonPlatform}.whl ./*
-    #cd ../
+  #${unzip}/bin/unzip $src/${pname}-${version}-${pythonAbi}-${pythonAbi}-${pythonPlatform}.whl -d tmp
+  #cd tmp
+  #${zip}/bin/zip -0 -r ../dist/${pname}-${version}-${pythonAbi}-${pythonAbi}-${pythonPlatform}.whl ./*
+  #cd ../
   #'';
 
-  nativeBuildInputs = [
-    breakpointHook
-  ]
-  ++ lib.optionals stdenv.isLinux [
-    autoPatchelfHook
-  ];
+  nativeBuildInputs = [ breakpointHook ] ++ lib.optionals stdenv.isLinux [ autoPatchelfHook ];
 
   dontWrapQtApps = true;
 
-  buildInputs = [
-    stdenv.cc.cc.lib
-    libGL
-    libz
-    qt5.qtbase
-  ] ++ lib.optionals stdenv.isLinux [
-    xorg.libxcb
-    xorg.libXext
-    xorg.libX11
-    xorg.libSM
-    xorg.libICE
-  ];
+  buildInputs =
+    [
+      stdenv.cc.cc.lib
+      libGL
+      libz
+      qt5.qtbase
+    ]
+    ++ lib.optionals stdenv.isLinux [
+      xorg.libxcb
+      xorg.libXext
+      xorg.libX11
+      xorg.libSM
+      xorg.libICE
+    ];
 
-  propagatedBuildInputs = [
-    numpy
-  ];
+  propagatedBuildInputs = [ numpy ];
 
   pythonImportsCheck = [ "cv2" ];
 
   meta = with lib; {
     description = "Wrapper package for OpenCV python bindings";
     homepage = "https://pypi.org/project/opencv-python";
-    license = with licenses; [ asl20 mit ];
+    license = with licenses; [
+      asl20
+      mit
+    ];
     maintainers = with maintainers; [ ];
   };
 }

@@ -1,10 +1,11 @@
-{ lib
-, buildPythonPackage
-, fetchPypi
-, poetry-core
-, jax
-, jaxlib-bin
-, tensorflow-probability
+{
+  lib,
+  buildPythonPackage,
+  fetchPypi,
+  poetry-core,
+  jax,
+  jaxlib-bin,
+  tensorflow-probability,
 }:
 
 buildPythonPackage rec {
@@ -17,9 +18,7 @@ buildPythonPackage rec {
     hash = "sha256-8spdSJN9e9jDdc6KxSmh7Z+NoxJjNNLgz91rfxuepI8=";
   };
 
-  nativeBuildInputs = [
-    poetry-core
-  ];
+  nativeBuildInputs = [ poetry-core ];
 
   propagatedBuildInputs = [
     jax

@@ -1,6 +1,7 @@
-{ fetchFromGitHub
-, buildBazelPackage
-, bazel
+{
+  fetchFromGitHub,
+  buildBazelPackage,
+  bazel,
 }:
 let
   src = fetchFromGitHub {
@@ -28,7 +29,7 @@ buildBazelPackage {
 
   buildAttrs = {
     dontUseCmakeConfigure = true;
-    
+
     installPhase = ''
       echo "installing..."
       ls -alspH bazel-bin/*
@@ -36,7 +37,7 @@ buildBazelPackage {
       mkdir -p $out/lib/tcmalloc
       install -v -Dm0755 bazel-bin/tcmalloc/*.lo $out/lib/tcmalloc/
     '';
-      #ls -alspH bazel-bin/tcmalloc
+    #ls -alspH bazel-bin/tcmalloc
   };
 
   removeRulesCC = false;

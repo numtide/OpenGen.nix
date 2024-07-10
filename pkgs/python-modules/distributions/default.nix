@@ -1,24 +1,25 @@
-{ lib
-, stdenv
-, fetchFromGitHub
-, callPackage
-, fetchPypi
-, protobuf3_20
-, buildPythonPackage
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
+  callPackage,
+  fetchPypi,
+  protobuf3_20,
+  buildPythonPackage,
 
-, eigen
-, enum34
-, goftests
-, numpy
-, parsable
-, pillow
-, protobuf
-, pyflakes
-, pytest
-, cython_0
-, scipy
-, simplejson
-, nose
+  eigen,
+  enum34,
+  goftests,
+  numpy,
+  parsable,
+  pillow,
+  protobuf,
+  pyflakes,
+  pytest,
+  cython_0,
+  scipy,
+  simplejson,
+  nose,
 }:
 let
   version = "2.2.1";
@@ -44,13 +45,9 @@ let
 
     doCheck = false;
 
-    nativeBuildInputs = [
-      pytest
-    ];
+    nativeBuildInputs = [ pytest ];
 
-    propagatedBuildInputs = [
-      pillow
-    ];
+    propagatedBuildInputs = [ pillow ];
 
     buildInputs = [
       enum34
@@ -100,9 +97,7 @@ buildPythonPackage {
 
   patches = [
     ./use-imread-instead-of-scipy.patch
-  ] ++ (lib.optionals stdenv.isDarwin [
-    ./gnu-sed-on-darwin.patch
-  ]);
+  ] ++ (lib.optionals stdenv.isDarwin [ ./gnu-sed-on-darwin.patch ]);
 
   env.DISTRIBUTIONS_USE_PROTOBUF = 1;
 

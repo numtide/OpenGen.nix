@@ -1,7 +1,4 @@
-{
-  fetchPypi,
-  buildPythonPackage
-}:
+{ fetchPypi, buildPythonPackage }:
 buildPythonPackage rec {
   pname = "parsable";
   version = "0.3.1";

@@ -1,38 +1,39 @@
-{ lib
-, callPackage
-, buildPythonPackage
-, fetchFromGitHub
-, setuptools
-, wheel
-, cpplint
-, cython_0
-, imageio
-, matplotlib
-, mock
-, nose
-, numpy
-, pandas
-, pep8
-, protobuf3_20
-, pyflakes
-, python3Packages
-, pytest
-, scikit-learn
-, scipy
-, simplejson
-, cmake
-, gnumake
-, stdenv
-, zlib
-, eigen
-, gperftools
-# , dockerTools
-# , basicTools
-, distributions
-, goftests
-, parsable
-, pymetis
-, contextlib2
+{
+  lib,
+  callPackage,
+  buildPythonPackage,
+  fetchFromGitHub,
+  setuptools,
+  wheel,
+  cpplint,
+  cython_0,
+  imageio,
+  matplotlib,
+  mock,
+  nose,
+  numpy,
+  pandas,
+  pep8,
+  protobuf3_20,
+  pyflakes,
+  python3Packages,
+  pytest,
+  scikit-learn,
+  scipy,
+  simplejson,
+  cmake,
+  gnumake,
+  stdenv,
+  zlib,
+  eigen,
+  gperftools,
+  # , dockerTools
+  # , basicTools
+  distributions,
+  goftests,
+  parsable,
+  pymetis,
+  contextlib2,
 }:
 let
 
@@ -60,13 +61,14 @@ let
       gperftools
     ];
 
-    buildInputs = [
-      distributions.distributions-shared
-    ];
+    buildInputs = [ distributions.distributions-shared ];
 
     enableParallelBuilding = true;
 
-    outputs = [ "out" "dev" ];
+    outputs = [
+      "out"
+      "dev"
+    ];
 
     prePatch = ''
       sed -i 's/-Werror//g' CMakeLists.txt # remove -Werror
@@ -81,16 +83,18 @@ let
     '';
   };
 
-  contextlib2_ = contextlib2.overrideAttrs (_final: _prev: {
-    # https://github.com/jazzband/contextlib2/pull/52
-    # updated to support Python3
-    src = fetchFromGitHub {
-      owner = "jazzband";
-      repo = "contextlib2";
-      rev = "b8b7eb8ecd9e012178b5dcec4313edded751a459";
-      hash = "sha256-FSx/vKctoFl4NlwzNDa9eDNUXeW1J875/nB6of+5gQk=";
-    };
-  });
+  contextlib2_ = contextlib2.overrideAttrs (
+    _final: _prev: {
+      # https://github.com/jazzband/contextlib2/pull/52
+      # updated to support Python3
+      src = fetchFromGitHub {
+        owner = "jazzband";
+        repo = "contextlib2";
+        rev = "b8b7eb8ecd9e012178b5dcec4313edded751a459";
+        hash = "sha256-FSx/vKctoFl4NlwzNDa9eDNUXeW1J875/nB6of+5gQk=";
+      };
+    }
+  );
 
   loom = buildPythonPackage {
     inherit version;
@@ -117,9 +121,7 @@ let
       gperftools
     ];
 
-    nativeCheckInputs = [
-      pyflakes
-    ];
+    nativeCheckInputs = [ pyflakes ];
 
     # https://github.com/numba/numba/issues/8698#issuecomment-1584888063
     env.NUMPY_EXPERIMENTAL_DTYPE_API = 1;
@@ -184,11 +186,11 @@ let
 
     passthru.more_packages = {
       inherit
-      goftests
-      distributions
-      pymetis
-      parsable
-      ;
+        goftests
+        distributions
+        pymetis
+        parsable
+        ;
     };
 
     # TODO: move it to a different package
@@ -202,18 +204,21 @@ let
 
     passthru.tests.run = callPackage ./test.nix { inherit src; };
 
-    passthru.test-shell = callPackage ({
-      mkShell
-      , python3
-      , loom
-      , which
-    }: mkShell {
-      packages = [
-        python3
-        loom
-        which
-      ];
-    }) {};
+    passthru.test-shell = callPackage (
+      {
+        mkShell,
+        python3,
+        loom,
+        which,
+      }:
+      mkShell {
+        packages = [
+          python3
+          loom
+          which
+        ];
+      }
+    ) { };
 
     meta = with lib; {
       description = "A streaming cross-cat inference engine";

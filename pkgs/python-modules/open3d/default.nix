@@ -1,49 +1,52 @@
-{ stdenv
-, lib
-, pkgs
-, fetchPypi
-, unzip
-, zip
+{
+  stdenv,
+  lib,
+  pkgs,
+  fetchPypi,
+  unzip,
+  zip,
 
-, autoPatchelfHook
-, python
-, tensorflow-bin
-, libusb
-, cudaPackages_11
-, buildPythonPackage
-, ipywidgets
-, matplotlib
-, numpy
-, pandas
-, plyfile
-, pytorchWithCuda
-, pyyaml
-, scikitlearn
-, scipy
-, tqdm
+  autoPatchelfHook,
+  python,
+  tensorflow-bin,
+  libusb,
+  cudaPackages_11,
+  buildPythonPackage,
+  ipywidgets,
+  matplotlib,
+  numpy,
+  pandas,
+  plyfile,
+  pytorchWithCuda,
+  pyyaml,
+  scikitlearn,
+  scipy,
+  tqdm,
 
-, libGL
-, libglvnd
-, libdrm
-, expat
-, xorg
-, llvmPackages_10
-, buildEnv
-, runCommand
+  libGL,
+  libglvnd,
+  libdrm,
+  expat,
+  xorg,
+  llvmPackages_10,
+  buildEnv,
+  runCommand,
 }:
 let
-  libllvm-wrapped = 
-  let
-    libllvm = llvmPackages_10.libllvm.lib;
-    name = libllvm.name;
-  in
-  buildEnv {
-    inherit name;
-    paths = [
-      llvmPackages_10.libllvm.lib
-      (runCommand "${name}.1" {} "mkdir -p $out/lib && ln -sf ${libllvm}/lib/libLLVM-10.so $out/lib/libLLVM-10.so.1")
-    ];
-  };
+  libllvm-wrapped =
+    let
+      libllvm = llvmPackages_10.libllvm.lib;
+      name = libllvm.name;
+    in
+    buildEnv {
+      inherit name;
+      paths = [
+        llvmPackages_10.libllvm.lib
+        (runCommand "${name}.1" { }
+          "mkdir -p $out/lib && ln -sf ${libllvm}/lib/libLLVM-10.so $out/lib/libLLVM-10.so.1"
+        )
+      ];
+    };
 
   version = "0.18.0";
   pname = "open3d";
@@ -135,11 +138,13 @@ let
   };
 
   pyVersion = lib.versions.majorMinor python.version;
-  srcInputs = prebuiltSrcs."${pyVersion}-${stdenv.system}" or (throw "open3d-bin for Python version '${pyVersion}' is not supported on '${stdenv.system}'");
+  srcInputs =
+    prebuiltSrcs."${pyVersion}-${stdenv.system}"
+      or (throw "open3d-bin for Python version '${pyVersion}' is not supported on '${stdenv.system}'");
 
   src = fetchPypi rec {
     inherit pname version;
-    inherit (srcInputs) platform dist hash; 
+    inherit (srcInputs) platform dist hash;
 
     python = dist;
     abi = dist;
@@ -163,9 +168,7 @@ buildPythonPackage {
     cd ../
   '';
 
-  nativeBuildInputs = [
-    autoPatchelfHook
-  ];
+  nativeBuildInputs = [ autoPatchelfHook ];
 
   buildInputs = [
     # so deps
@@ -201,7 +204,7 @@ buildPythonPackage {
   ];
 
   #preBuild = ''
-    #mkdir $out
+  #mkdir $out
   #'';
 
   preFixup = ''

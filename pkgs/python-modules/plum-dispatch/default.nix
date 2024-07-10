@@ -1,26 +1,27 @@
-{ lib
-, buildPythonPackage
-, fetchPypi
-, hatch-vcs
-, hatchling
-, beartype
-, rich
-, typing-extensions
-, black
-, build
-, coveralls
-, ghp-import
-, ipython
-, jupyter-book
-, mypy
-, numpy
-, pre-commit
-, pyright
-, pytest
-, pytest-cov
-, ruff
-, tox
-, wheel
+{
+  lib,
+  buildPythonPackage,
+  fetchPypi,
+  hatch-vcs,
+  hatchling,
+  beartype,
+  rich,
+  typing-extensions,
+  black,
+  build,
+  coveralls,
+  ghp-import,
+  ipython,
+  jupyter-book,
+  mypy,
+  numpy,
+  pre-commit,
+  pyright,
+  pytest,
+  pytest-cov,
+  ruff,
+  tox,
+  wheel,
 }:
 
 buildPythonPackage rec {
