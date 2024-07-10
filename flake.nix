@@ -74,13 +74,10 @@
           # FIXME: I don't think this is working as expected. Better to change nixpkgs wthfor now.
 
           # Use the pre-built version of tensorflow
-          tensorflow = final.tensorflow-bin;
+          tensorflow = if final.tensorflow-bin.meta.broken then final.tensorflow-build else final.tensorflow-bin;
 
           # Use the pre-built version of jaxlib
-          jaxlib = final.jaxlib-bin;
-
-          # Use the pre-built version of libjax
-          libjax = final.libjax-bin;
+          jaxlib = if final.jaxlib-bin.meta.broken then final.jaxlib-build else final.jaxlib-bin;
         };
 
         devshellPython = (self'.legacyPackages.python3Packages.python.withPackages (p: [
