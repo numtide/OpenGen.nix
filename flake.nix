@@ -32,6 +32,7 @@
         # 2. Add foo as a parameter to the outputs function
         # 3. Add here: foo.flakeModule
         ./lib
+        ./devshell.nix
         inputs.flake-parts.flakeModules.easyOverlay
       ];
       systems = [
@@ -101,14 +102,6 @@
             jaxlib = if final.jaxlib-bin.meta.broken then final.jaxlib-build else final.jaxlib-bin;
           };
 
-          devshellPython = (
-            self'.legacyPackages.python3Packages.python.withPackages (p: [
-              self'.legacyPackages.python3Packages.bayes3d
-              self'.legacyPackages.python3Packages.jax
-              p.jupyter
-              p.scipy
-            ])
-          );
         in
         {
           _module.args.pkgs = import inputs.nixpkgs {
@@ -130,28 +123,13 @@
           inherit packages;
 
           checks = packages // {
-            inherit devshellPython;
+            devshellPython = self'.devShells.default;
           };
 
           legacyPackages.python3Packages =
             (pkgs.python311Packages.overrideScope pythonOverrides).overrideScope
               (final: _prev: loadPackages final.callPackage ./pkgs/python-modules);
 
-          devShells.default = pkgs.mkShell {
-            packages = [
-              self'.legacyPackages.python3Packages.python-lsp-server
-              devshellPython
-            ];
-
-            shellHook = ''
-              export EXTRA_LDFLAGS="-L/lib -L${pkgs.linuxPackages.nvidia_x11}/lib"
-              export EXTRA_CCFLAGS="-I/usr/include"
-              export CUDA_PATH=${pkgs.cudatoolkit_11}
-              export B3D_ASSET_PATH="${packages.bayes3d.src}/assets"
-
-              jupyter notebook
-            '';
-          };
         };
 
       # NOTE: this property is consumed by flake-parts.mkFlake to define fields
