@@ -91,14 +91,14 @@
           _module.args.pkgs = import inputs.nixpkgs {
             inherit system;
             config = {
-              # FIXME: commenting these out to see if they fix the duplicate dependency issue when building bayes3d
               allowUnfree = true;
               # Only enable CUDA on Linux
               cudaSupport = (system == "x86_64-linux" || system == "aarch64-linux");
             };
             overlays = [
               (_final: _prev: {
-                # FIXME: say why this was added.
+                # This was added due to llvmPackages_10 requirement by Open3d
+                # and it having been removed from Nixpkgs.
                 inherit (inputs.nixpkgs-llvm-10.legacyPackages.${system}) llvmPackages_10;
               })
             ];
