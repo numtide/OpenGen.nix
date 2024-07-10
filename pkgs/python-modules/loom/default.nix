@@ -33,6 +33,7 @@
 , goftests
 , parsable
 , pymetis
+, contextlib2
 }:
 let
 
@@ -81,7 +82,7 @@ let
     '';
   };
 
-  contextlib2 = python3Packages.contextlib2.overrideAttrs (final: prev: {
+  contextlib2_ = contextlib2.overrideAttrs (final: prev: {
     # https://github.com/jazzband/contextlib2/pull/52
     # updated to support Python3
     src = fetchFromGitHub {
@@ -128,7 +129,7 @@ let
 
     propagatedBuildInputs = [
       loom-cpp
-      contextlib2
+      contextlib2_
       cpplint
       cython_0
       distributions

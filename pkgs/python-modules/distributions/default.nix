@@ -3,11 +3,22 @@
 , fetchFromGitHub
 , callPackage
 , fetchPypi
-, eigen
-, parsable
-, goftests
 , protobuf3_20
-, python3Packages
+, buildPythonPackage
+
+, eigen
+, enum34
+, goftests
+, numpy
+, parsable
+, pillow
+, protobuf
+, pyflakes
+, pytest
+, cython_0
+, scipy
+, simplejson
+, nose
 }:
 let
   version = "2.2.1";
@@ -22,7 +33,7 @@ let
   distributions-shared = callPackage ./distributions-shared.nix { inherit version src; };
 
   # TODO: move into own package
-  imageio_2_6_1 = python3Packages.buildPythonPackage rec {
+  imageio_2_6_1 = buildPythonPackage rec {
     pname = "imageio";
     version = "2.6.1";
 
@@ -33,28 +44,28 @@ let
 
     doCheck = false;
 
-    nativeBuildInputs = with python3Packages; [
+    nativeBuildInputs = [
       pytest
     ];
 
-    propagatedBuildInputs = with python3Packages; [
+    propagatedBuildInputs = [
       pillow
     ];
 
-    buildInputs = with python3Packages; [
+    buildInputs = [
       enum34
       numpy
     ];
   };
 in
-python3Packages.buildPythonPackage {
+buildPythonPackage {
   pname = "distributions";
 
   inherit version src;
 
   nativeBuildInputs = [
     protobuf3_20
-    python3Packages.pyflakes
+    pyflakes
   ];
 
   buildInputs = [
@@ -64,7 +75,7 @@ python3Packages.buildPythonPackage {
     protobuf3_20
   ];
 
-  propagatedBuildInputs = with python3Packages; [
+  propagatedBuildInputs = [
     protobuf3_20
     protobuf
     cython_0
@@ -76,7 +87,7 @@ python3Packages.buildPythonPackage {
 
   # TODO: be more precise. Some tests seem to be still in Python 2.
   doCheck = false;
-  nativeCheckInputs = with python3Packages; [
+  nativeCheckInputs = [
     imageio_2_6_1
     nose
     goftests
