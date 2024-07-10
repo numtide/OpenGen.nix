@@ -33,6 +33,7 @@
         # 3. Add here: foo.flakeModule
         ./lib
         ./devshell.nix
+        ./pkgs/python-packages.nix
         inputs.flake-parts.flakeModules.easyOverlay
       ];
       systems = [
@@ -85,23 +86,6 @@
               else
                 callPackage "${toString path}/${name}" { }
             ) entries;
-
-          # For fixing existing packages that live in nixpkgs
-          # TODO: put in separate file
-          pythonOverrides = final: _prev: {
-            # so we can pull from flake inputs
-            inherit inputs;
-
-            # FIXME: I don't think this is working as expected. Better to change nixpkgs wthfor now.
-
-            # Use the pre-built version of tensorflow
-            tensorflow =
-              if final.tensorflow-bin.meta.broken then final.tensorflow-build else final.tensorflow-bin;
-
-            # Use the pre-built version of jaxlib
-            jaxlib = if final.jaxlib-bin.meta.broken then final.jaxlib-build else final.jaxlib-bin;
-          };
-
         in
         {
           _module.args.pkgs = import inputs.nixpkgs {
@@ -125,11 +109,6 @@
           checks = packages // {
             devshellPython = self'.devShells.default;
           };
-
-          legacyPackages.python3Packages =
-            (pkgs.python311Packages.overrideScope pythonOverrides).overrideScope
-              (final: _prev: loadPackages final.callPackage ./pkgs/python-modules);
-
         };
 
       # NOTE: this property is consumed by flake-parts.mkFlake to define fields
