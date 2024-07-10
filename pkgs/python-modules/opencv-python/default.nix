@@ -35,7 +35,7 @@ let
 
     "aarch64-darwin" = {
       url = "https://files.pythonhosted.org/packages/66/82/564168a349148298aca281e342551404ef5521f33fba17b388ead0a84dc5/opencv_python-4.10.0.84-cp37-abi3-macosx_11_0_arm64.whl";
-      hash = "";
+      hash = "sha256-/Bgvj0zaUbRfAcZOTL7fwvAK/3md6+vDBdjQIQxD8lE=";
     };
   };
 
