@@ -73,19 +73,6 @@
               ;
             };
           };
-
-          loadPackages =
-            callPackage: path:
-            let
-              entries = builtins.readDir path;
-            in
-            pkgs.lib.mapAttrs (
-              name: type:
-              if type != "directory" then
-                (throw "${toString path}/${name} is not a directory")
-              else
-                callPackage "${toString path}/${name}" { }
-            ) entries;
         in
         {
           _module.args.pkgs = import inputs.nixpkgs {
