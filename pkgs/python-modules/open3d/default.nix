@@ -1,9 +1,11 @@
 { stdenv
 , lib
+, config
 , pkgs
 , fetchPypi
 , unzip
 , zip
+, cudaSupport ? config.cudaSupport
 
 , autoPatchelfHook
 , python
@@ -17,7 +19,6 @@
 , pandas
 , plyfile
 , torch
-, pytorchWithCuda
 , pyyaml
 , scikitlearn
 , scipy
@@ -55,69 +56,6 @@ let
   pname = "open3d";
 
   prebuiltSrcs = {
-    "3.8-x86_64-linux" = {
-      platform = "manylinux_2_27_x86_64";
-      dist = "cp38";
-      hash = "";
-    };
-    "3.8-aarch64-linux" = {
-      platform = "manylinux_2_27_aarch64";
-      dist = "cp38";
-      hash = "";
-    };
-    "3.8-x86_64-darwin" = {
-      platform = "macosx_11_0_x86_64";
-      dist = "cp38";
-      hash = "";
-    };
-    "3.8-aarch64-darwin" = {
-      platform = "macosx_13_0_aarch64";
-      dist = "cp38";
-      hash = "";
-    };
-
-    "3.9-x86_64-linux" = {
-      platform = "manylinux_2_27_x86_64";
-      dist = "cp39";
-      hash = "";
-    };
-    "3.9-aarch64-linux" = {
-      platform = "manylinux_2_27_aarch64";
-      dist = "cp39";
-      hash = "";
-    };
-    "3.9-x86_64-darwin" = {
-      platform = "macosx_11_0_x86_64";
-      dist = "cp39";
-      hash = "";
-    };
-    "3.9-aarch64-darwin" = {
-      platform = "macosx_13_0_arm64";
-      dist = "cp39";
-      hash = "";
-    };
-
-    "3.10-x86_64-linux" = {
-      platform = "manylinux_2_27_x86_64";
-      dist = "cp310";
-      hash = "";
-    };
-    "3.10-aarch64-linux" = {
-      platform = "manylinux_2_27_aarch64";
-      dist = "cp310";
-      hash = "";
-    };
-    "3.10-x86_64-darwin" = {
-      platform = "macosx_11_0_x86_64";
-      dist = "cp310";
-      hash = "";
-    };
-    "3.10-aarch64-darwin" = {
-      platform = "macosx_13_0_arm64";
-      dist = "cp310";
-      hash = "";
-    };
-
     "3.11-x86_64-linux" = {
       platform = "manylinux_2_27_x86_64";
       dist = "cp311";
@@ -126,12 +64,12 @@ let
     "3.11-aarch64-linux" = {
       platform = "manylinux_2_27_aarch64";
       dist = "cp311";
-      hash = "";
+      hash = "sha256-iC8eUDmjwcXsBRg+tlBTf9dDEji3zLK3QspUefAvcFs=";
     };
     "3.11-x86_64-darwin" = {
-      platform = "macosx_11_0_x86_64";
+      platform = "macosx_10_15_universal2";
       dist = "cp311";
-      hash = "";
+      hash = "sha256-s1pouf7z6WMmbbO7Ffv+8g4FeHvGEZL2FyX95SFfNWA=";
     };
     "3.11-aarch64-darwin" = {
       platform = "macosx_13_0_arm64";
@@ -188,14 +126,13 @@ buildPythonPackage {
     libllvm-wrapped
     pkgs.mesa
     pkgs.zstd
+    torch
   ]
   ++ (lib.optionals stdenv.isLinux [
     libdrm
-    pytorchWithCuda
-    cudaPackages_11.cudatoolkit.lib
   ])
-  ++ (lib.optionals stdenv.isDarwin [
-    torch
+  ++ (lib.optionals cudaSupport [
+    cudaPackages_11.cudatoolkit.lib
   ]);
 
   propagatedBuildInputs = [
