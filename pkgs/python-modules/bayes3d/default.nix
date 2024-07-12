@@ -1,8 +1,10 @@
 {
   lib,
   stdenv,
+  config,
   fetchFromGitHub,
   buildPythonPackage,
+  cudaSupport ? config.cudaSupport,
   cudaPackages_11,
   which,
   libglvnd,
@@ -16,7 +18,6 @@
   setuptools,
   setuptools-scm,
   torch,
-  pytorchWithCuda,
   graphviz,
   imageio,
   matplotlib,
@@ -62,6 +63,10 @@ buildPythonPackage rec {
     hash = "sha256-6AtxR8ZsByliDTQE/hEJs5+LKwdfS/sRGYXf+mgFHxw=";
   };
 
+  patches = [
+    ./optional-cuda.patch
+  ];
+
   pyproject = true;
 
   nativeBuildInputs = [
@@ -74,7 +79,7 @@ buildPythonPackage rec {
     libglvnd
     libGLU
   ]
-  ++ (lib.optionals stdenv.isLinux [
+  ++ (lib.optionals cudaSupport [
     cudaPackages_11.cudatoolkit.lib
   ]);
 
@@ -93,19 +98,16 @@ buildPythonPackage rec {
     plyfile
     pyransac3d
     tensorflow-probability
-    timm
     trimesh
-  ]
-  ++ (lib.optionals stdenv.isLinux [
-    pytorchWithCuda
-  ])
-  ++ (lib.optionals stdenv.isDarwin [
     torch
-  ]);
+    timm
+  ];
 
-  preBuild = "" + (lib.optionalString stdenv.isLinux ''
+  preBuild = "" + (lib.optionalString cudaSupport ''
     export CUDA_HOME=${cuda-native-redist}
   '');
+
+  env.WITH_CUDA = if cudaSupport then "1" else "0";
 
   pythonImportsCheck = [ "bayes3d" ];
 }

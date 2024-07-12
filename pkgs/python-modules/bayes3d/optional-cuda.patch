@@ -1,0 +1,42 @@
+diff --git a/setup.py b/setup.py
+index 44c67e9..6a1d6df 100644
+--- a/setup.py
++++ b/setup.py
+@@ -56,8 +56,11 @@ source_files = [
+ ]
+ source_files = [os.path.join(CPP_SRC_DIR, fn) for fn in source_files]
+
+-# Some containers set this to contain old architectures that won't compile. We only need the one installed in the machine.
+-os.environ["TORCH_CUDA_ARCH_LIST"] = ""
++cuda_enabled = bool(int(os.getenv("WITH_CUDA", "1")))
++
++if cuda_enabled:
++    # Some containers set this to contain old architectures that won't compile. We only need the one installed in the machine.
++    os.environ["TORCH_CUDA_ARCH_LIST"] = ""
+
+ # On Linux, show a warning if GLEW is being forcibly loaded when compiling the GL plugin.
+ if (os.name == "posix") and ("libGLEW" in os.environ.get("LD_PRELOAD", "")):
+@@ -84,14 +87,19 @@ if os.name == "nt":
+         pass
+
+
+-setuptools.setup(
+-    ext_modules=[
++ext_modules = []
++
++if cuda_enabled:
++    ext_modules.append(
+         cpp_extension.CUDAExtension(
+             name="bayes3d.rendering.nvdiffrast.nvdiffrast_plugin_gl",
+             sources=source_files,
+             extra_compile_args={"cxx": opts, "nvcc": opts + ["-lineinfo"]},
+             extra_link_args=ldflags,
+-        ),
+-    ],
++        )
++    )
++
++setuptools.setup(
++    ext_modules=ext_modules,
+     cmdclass={"build_ext": cpp_extension.BuildExtension},
+ )
