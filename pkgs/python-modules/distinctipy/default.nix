@@ -1,5 +1,5 @@
 {
-  fetchPypi,
+  fetchFromGitHub,
   buildPythonPackage,
   setuptools,
   numpy,
@@ -9,9 +9,11 @@ buildPythonPackage rec {
   version = "1.3.4";
   format = "pyproject";
 
-  src = fetchPypi {
-    inherit pname version;
-    hash = "sha256-/tl6//Gvtz7KqHyFRhAh8LqJ+uYwZ8ASW5ZzUmUQqsQ=";
+  src = fetchFromGitHub {
+    owner = "alan-turing-institute";
+    repo = pname;
+    rev = "v${version}";
+    hash = "sha256-y+++w+YwIR+krSnFlZmkNNCkmquh+2T+T5UdusxTD+w=";
   };
 
   doCheck = false;
@@ -19,4 +21,6 @@ buildPythonPackage rec {
   nativeBuildInputs = [ setuptools ];
 
   propagatedBuildInputs = [ numpy ];
+
+  pythonImportsCheck = [ "distinctipy" ];
 }
