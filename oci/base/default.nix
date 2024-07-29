@@ -1,8 +1,8 @@
 {
-  pkgs,
   nixpkgs,
+  opengen,
+  pkgs,
   system,
-  basicTools,
 }:
 let
   # in OCI context, whatever our host platform we want to build same arch but linux
@@ -14,7 +14,7 @@ let
     name = "probcomp/nix-base";
     tag = systemWithLinux;
     contents =
-      (basicTools crossPkgsLinux)
+      (opengen.lib.basicTools crossPkgsLinux)
       ++ (with crossPkgsLinux; [
         bashInteractive
         busybox # NOTE: might be unnecessary

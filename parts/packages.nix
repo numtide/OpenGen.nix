@@ -1,22 +1,9 @@
-{ self, inputs, ... }:
+{ ... }:
 {
   perSystem =
     { self', pkgs, lib, ... }:
     {
-      packages = rec {
-        baseOCI = pkgs.callPackage ../pkgs/ociBase {
-          inherit (inputs) nixpkgs;
-          basicTools = self.lib.basicTools;
-        };
-
-        loomOCI = pkgs.dockerTools.buildLayeredImage {
-          name = "probcomp/loom";
-          contents = [
-            self'.packages.python.pkgs.loom
-            pkgs.bashInteractive
-          ] ++ (self.lib.basicTools pkgs);
-        };
-
+      packages = {
         jupyter-bayes3d =
           let
             devshellPython = self'.packages.python.withPackages (p: [
@@ -49,6 +36,7 @@
           };
       };
 
+      # Map all the packages to flake checks
       checks = pkgs.lib.mapAttrs' (name: value: {
         name = "pkg-${name}";
         inherit value;

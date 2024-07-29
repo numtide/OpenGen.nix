@@ -15,6 +15,10 @@
     #
     genjax.url = "github:probcomp/genjax?ref=v0.1.1";
     genjax.flake = false;
+
+    gensqlquery.url = "github:OpenGen/GenSQL.query";
+    gensqlquery.inputs.flake-parts.follows = "flake-parts";
+    gensqlquery.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   nixConfig = {
@@ -42,6 +46,7 @@
         ./parts/devshell.nix
         ./parts/formatter.nix
         ./parts/lib.nix
+        ./parts/oci.nix
         ./parts/packages.nix
         ./parts/python.nix
       ];

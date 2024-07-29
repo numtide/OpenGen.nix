@@ -1,66 +1,117 @@
-# OpenGen/nix
+# OpenGen.nix
 
-This repo holds Nix flake, modules, packages, and reusable utility Nix language code for use across the OpenGen ecosystem.
+This repo holds Nix flake, modules, packages, and reusable utility Nix language code for use across the OpenGen ecosystem. Either directly, or indirectly.
 
-## Usage
+## Features
 
-### Build an artifact
+### Packages
 
-Currently, you can build a package directly like so:
+The repository comes packed with packages used day-to-day by developers.
+* sppl
+* loom
+* bayes3d
+* ...
 
-```bash
-nix build github.com:OpenGen/nix#sppl
-```
-
-### Build an OCI image with an environment
-
-OCI images consume these libraries and ones from other OpenGen repos, and are specified in another flake (excepting the `base` oci image):
+Those can be executed directly, without complicated installation steps:
 
 ```bash
-nix build github.com:OpenGen/nix#ociImgLoom
+nix run github.com:numtide/OpenGen.nix#loom
 ```
+
+### Load OCI/Docker images
+
+Docker images are useful to create developer environment for users not running
+on Linux.
+
+On Linux, build and load them with:
+```console
+$ nix build github.com:numtide/OpenGen.nix#oci-gensql-loom
+$ docker load -i ./result
+```
+
+The resulting image can then be published to a Docker registry.
 
 ### Import utility code
 
-To access the `lib` code exported by this flake, declare this repo as a flake input:
+Use the libraries in your own project. For example here we create a small
+developer shell with python, Bayes3D and GenJax.
 
 ```nix
 {
   inputs = {
-    nixpkgs.url = ...
-    opengen.url = "github:OpenGen/nix";
+    opengen.url = "github:numtide/OpenGen.nix";
+    nixpkgs.follows = "opengen/nixpkgs";
   };
-  outputs = inputs@{ nixpkgs, opengen, ... }: let
-    # call some function
-    toolbox = opengen.lib.basicTools "aarch64-darwin";
+  outputs = { self, nixpkgs, opengen }: let
+    eachSys = nixpkgs.lib.genAttrs ["x86_64-linux"];
   in {
-    ...
+  devShells = eachSys (system: {
+    default = nixpkgs.legacyPackages.${system}.mkShell {
+      packages = [
+        opengen.packages.${system}.python.withPackages (p: [
+          p.bayes3d
+          p.genjax
+        ]);
+      ];
+    };
   };
 };
 ```
 
-## Packages
+### Other advantages
 
-List of Nix packages available in this repo.
+* CUDA support on Linux.
+* Shareable build results (with binary cache).
 
-### `.#baseOCI`
+## Setup
 
-### `.#loomOCI`
+1. [Install Nix](https://nixos.org/nix)
 
-A Loom container image is also provided. It can be built and loaded into your local Docker registry with the following command:
+2. Because genjax is closed source, Nix needs to be configured to access the
+   repository.
 
+To do so, run:
 ```console
-$ docker load -i $(nix build '.#loomOCI' --no-link --print-out-paths)
+$ gh auth login
+$ mkdir -p ~/.config/nix
+$ echo "access-tokens = github.com=$(gh auth token)" >> ~/.config/nix/nix.conf
 ```
+
+## Packages
 
 ### `.#jupyter-bayes3d`
 
-A jupyter environment with bayes libraries available.
+A Jupyter environment with Bayes3D libraries available.
 
 Example:
 ```console
 $ nix run .#jupyter-bayes3d notebook ./notebooks/demo.ipynb
 ```
+
+## OCI Images
+
+This project also generates Docker / OCI images for common scenarios. This is
+useful for users that don't have access to a Linux or Nix machine.
+
+Those images can be loaded into your local Docker registry with the following
+command:
+
+Example:
+```console
+$ docker load -i $(nix build '.#oci-gensql-loom' --no-link --print-out-paths)
+```
+
+### `.#oci-base`
+
+A barebone image with common tools in it.
+
+### `.#oci-gensql-loom`
+
+Docker image including the loom utility.
+
+### `.#oci-gensql-query`
+
+Docker image for gensql.query
 
 ## Python Packages
 
@@ -83,8 +134,8 @@ platform-dependent `distributions`.
 Your options are:
 
 ```console
-$ nix build '.#packages.x86_64-linux.loom'                      # same as `.#loom` if that is your OS/arch
-$ nix build './envs-flake#packages.x86_64-darwin.ociImgLoom'
+$ nix build '.#packages.x86_64-linux.loom'        # same as `.#loom` if that is your OS/arch
+$ nix build '.#packages.x86_64-darwin.oci-gensql-loom'
 ```
 
 If you are running on Mac silicon (`aarch64-darwin`), that OCI image will run but behavior is not defined or supported.
