@@ -42,7 +42,7 @@
         ./parts/devshell.nix
         ./parts/formatter.nix
         ./parts/lib.nix
-        ./parts/pkgs.nix
+        ./parts/packages.nix
         ./parts/python.nix
       ];
 
