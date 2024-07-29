@@ -1,4 +1,4 @@
-final: prev:
+final: _prev:
 let
   dir = toString ./python-packages;
   dirEntries = builtins.readDir dir;

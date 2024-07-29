@@ -64,7 +64,7 @@
         };
 
       # This function describe changes to apply to nixpkgs that we need.
-      flake.overlays.default = final: prev: {
+      flake.overlays.default = _final: prev: {
         # This was added due to llvmPackages_10 requirement by Open3d
         # and it having been removed from Nixpkgs.
         inherit (inputs.nixpkgs-llvm-10.legacyPackages.${prev.system}) llvmPackages_10;

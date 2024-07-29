@@ -2,10 +2,8 @@
 {
   perSystem =
     {
-      config,
       self',
       pkgs,
-      system,
       ...
     }:
     {

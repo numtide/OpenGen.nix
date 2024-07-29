@@ -1,6 +1,5 @@
 {
   lib,
-  stdenv,
   config,
   fetchFromGitHub,
   buildPythonPackage,

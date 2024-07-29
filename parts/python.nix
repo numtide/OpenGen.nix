@@ -1,7 +1,7 @@
-{ inputs, ... }:
+{ ... }:
 {
   perSystem =
-    { pkgs, self', ... }:
+    { pkgs, ... }:
     let
       # We use python 3.11
       python = pkgs.python311;
