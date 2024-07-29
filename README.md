@@ -45,12 +45,21 @@ List of Nix packages available in this repo.
 
 ### `.#baseOCI`
 
-#### `.#loomOCI`
+### `.#loomOCI`
 
 A Loom container image is also provided. It can be built and loaded into your local Docker registry with the following command:
 
 ```console
 $ docker load -i $(nix build '.#loomOCI' --no-link --print-out-paths)
+```
+
+### `.#jupyter-bayes3d`
+
+A jupyter environment with bayes libraries available.
+
+Example:
+```console
+$ nix run .#jupyter-bayes3d notebook ./notebooks/demo.ipynb
 ```
 
 ## Python Packages
