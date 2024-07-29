@@ -1,16 +1,16 @@
 {
-  pkgs,
   nixpkgs,
   opengen,
+  pkgs,
   system,
 }:
 let
   # in OCI context, whatever our host platform we want to build same arch but linux
   systemWithLinux = builtins.replaceStrings [ "darwin" ] [ "linux" ] system;
   crossPkgsLinux = nixpkgs.legacyPackages.${systemWithLinux};
-  python = crossPkgsLinux.python3;
+  python = crossPkgsLinux.python311;
 
-  base = opengen.packages.${system}.baseOCI;
+  base = opengen.packages.${system}.oci-base;
 
   loom = opengen.packages.${systemWithLinux}.loom;
 in

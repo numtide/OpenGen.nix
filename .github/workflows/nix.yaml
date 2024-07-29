@@ -25,19 +25,19 @@ jobs:
         nix build \
           -L \
           -o ./imgBase \
-          '.#ociImgBase'
-    - name:  build Gensql Query image
-      run: |
-        nix build \
-          -L \
-          -o ./imgGensqlQuery \
-          './envs-flake#ociImgGensqlQuery'
+          '.#oci-base'
     - name:  build Loom image
       run: |
         nix build \
           -L \
           -o ./imgLoom \
-          './envs-flake#ociImgLoom'
+          '.#oci-gensql-loom'
+    - name:  build Gensql Query image
+      run: |
+        nix build \
+          -L \
+          -o ./imgGensqlQuery \
+          '.#oci-gensql-query'
 
     - name: Login to Docker Hub
       # only run this  when running on main, because
