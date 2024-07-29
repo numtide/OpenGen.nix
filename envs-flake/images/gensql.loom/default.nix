@@ -10,7 +10,7 @@ let
   crossPkgsLinux = nixpkgs.legacyPackages.${systemWithLinux};
   python = crossPkgsLinux.python3;
 
-  base = opengen.packages.${system}.ociImgBase;
+  base = opengen.packages.${system}.baseOCI;
 
   loom = opengen.packages.${systemWithLinux}.loom;
 in

@@ -10,7 +10,7 @@
     }:
     {
       packages = rec {
-        ociImgBase = pkgs.callPackage ../pkgs/ociBase {
+        baseOCI = pkgs.callPackage ../pkgs/ociBase {
           inherit (inputs) nixpkgs;
           basicTools = self.lib.basicTools;
         };
