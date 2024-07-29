@@ -66,7 +66,6 @@ Native library for probability distributions in python used by Loom. NOTE: this 
 #### `.#loom.morePackages.parsable`
 #### `.#loom.morePackages.pymetis`
 #### `.#loom.morePackages.goftests`
-#### `.#loom.morePackages.tcmalloc`
 
 Other upstream python packages required by Distributions and/or Loom.
 
