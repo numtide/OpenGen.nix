@@ -28,8 +28,6 @@
         ${lib.optionalString config.cudaSupport cudaShellHook}
         export EXTRA_CCFLAGS="-I/usr/include"
         export B3D_ASSET_PATH="${self'.packages.bayes3d.src}/assets"
-
-        jupyter notebook
       '';
     };
   };
