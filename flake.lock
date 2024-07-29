@@ -2,7 +2,9 @@
   "nodes": {
     "flake-parts": {
       "inputs": {
-        "nixpkgs-lib": "nixpkgs-lib"
+        "nixpkgs-lib": [
+          "nixpkgs"
+        ]
       },
       "locked": {
         "lastModified": 1714641030,
@@ -18,38 +20,61 @@
         "type": "github"
       }
     },
+    "genjax": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1706565447,
+        "narHash": "sha256-dMTB2YPnmboU+ZFpNF3+ZrcK4uH2ZjQ4hQKzXu49sjc=",
+        "owner": "probcomp",
+        "repo": "genjax",
+        "rev": "3357b75b7ae64121b2848254e11c5b79ee7f1820",
+        "type": "github"
+      },
+      "original": {
+        "owner": "probcomp",
+        "ref": "v0.1.1",
+        "repo": "genjax",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1714253743,
-        "narHash": "sha256-mdTQw2XlariysyScCv2tTE45QSU9v/ezLcHJ22f0Nxc=",
+        "lastModified": 1720028458,
+        "narHash": "sha256-DuQi7Eaa7hfpl5WufMiWDq/a4p5qngRtwhXNGHmdv4Y=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "58a1abdbae3217ca6b702f03d3b35125d88a2994",
+        "rev": "d8724afca4565614164dd81345f6137c4c6eab21",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixos-unstable",
+        "ref": "d8724afca4565614164dd81345f6137c4c6eab21",
         "repo": "nixpkgs",
         "type": "github"
       }
     },
-    "nixpkgs-lib": {
+    "nixpkgs-llvm-10": {
       "locked": {
-        "lastModified": 1714640452,
-        "narHash": "sha256-QBx10+k6JWz6u7VsohfSw8g8hjdBZEf8CFzXH1/1Z94=",
-        "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/50eb7ecf4cd0a5756d7275c8ba36790e5bd53e33.tar.gz"
+        "lastModified": 1706589919,
+        "narHash": "sha256-pNHnDITxSI3a17GOF1RUF3jBO1OiNYTRH2yV/cJG4m4=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "222c1940fafeda4dea161858ffe6ebfc853d3db5",
+        "type": "github"
       },
       "original": {
-        "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/50eb7ecf4cd0a5756d7275c8ba36790e5bd53e33.tar.gz"
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "222c1940fafeda4dea161858ffe6ebfc853d3db5",
+        "type": "github"
       }
     },
     "root": {
       "inputs": {
         "flake-parts": "flake-parts",
-        "nixpkgs": "nixpkgs"
+        "genjax": "genjax",
+        "nixpkgs": "nixpkgs",
+        "nixpkgs-llvm-10": "nixpkgs-llvm-10"
       }
     }
   },

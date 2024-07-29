@@ -1,0 +1,12 @@
+--- a/Makefile
++++ b/Makefile
+@@ -10,7 +10,7 @@ ifeq ($(uname),Linux)
+ endif
+ ifeq ($(uname),Darwin)
+ 	ld_library_path=DYLD_LIBRARY_PATH
+-	sed_no_backup_arg=-i ''
++	sed_no_backup_arg=-i
+ endif
+ 
+ cmake_args=
+

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# This value is a GitHub PAT, it can be generated on the following page:
+# https://github.com/settings/tokens
+#
+# Ensure the "repo" scope is enabled
+export NIX_GITHUB_TOKEN=<TODO>
+

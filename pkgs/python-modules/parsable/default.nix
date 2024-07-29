@@ -1,8 +1,5 @@
-{
-  fetchPypi,
-  python3Packages
-}:
-python3Packages.buildPythonPackage rec {
+{ fetchPypi, buildPythonPackage }:
+buildPythonPackage rec {
   pname = "parsable";
   version = "0.3.1";
   format = "setuptools";

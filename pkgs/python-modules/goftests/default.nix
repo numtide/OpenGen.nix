@@ -1,8 +1,11 @@
 {
   fetchPypi,
-  python3Packages,
+  buildPythonPackage,
+  numpy,
+  scipy,
 }:
-python3Packages.buildPythonPackage rec {
+# TODO: upstream
+buildPythonPackage rec {
   pname = "goftests";
   version = "0.2.7";
   format = "setuptools";
@@ -12,7 +15,10 @@ python3Packages.buildPythonPackage rec {
     hash = "sha256-5s0NugSus2TuZIInesCNJNAtxEHnZLQIjn0pxGgwL/o=";
   };
 
-  buildInputs = with python3Packages; [ numpy scipy ];
+  buildInputs = [
+    numpy
+    scipy
+  ];
 
   doCheck = false;
 

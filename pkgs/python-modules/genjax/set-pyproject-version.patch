@@ -1,0 +1,11 @@
+diff a/pyproject.toml b/pyproject.toml
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -1,6 +1,6 @@
+ [tool.poetry]
+ name = "genjax"
+-version = "0.0.0"
++version = "0.1.1"
+ description = "Probabilistic programming with Gen, built on top of JAX."
+ authors = [
+   "McCoy R. Becker <mccoyb@mit.edu>",

@@ -3,10 +3,28 @@
 
   inputs = {
     flake-parts.url = "github:hercules-ci/flake-parts";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
+
+    nixpkgs.url = "github:NixOS/nixpkgs?ref=d8724afca4565614164dd81345f6137c4c6eab21";
+    nixpkgs-llvm-10.url = "github:NixOS/nixpkgs?rev=222c1940fafeda4dea161858ffe6ebfc853d3db5";
+
+    genjax.url = "github:probcomp/genjax?ref=v0.1.1";
+    genjax.flake = false;
   };
 
-  outputs = inputs@{ self, nixpkgs, flake-parts, ... }:
+  nixConfig.extra-substituters = [ "https://numtide.cachix.org" ];
+  nixConfig.extra-trusted-public-keys = [
+    "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
+  ];
+  nixConfig.sandbox = "relaxed";
+
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      flake-parts,
+      ...
+    }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         # To import a flake module
@@ -14,40 +32,71 @@
         # 2. Add foo as a parameter to the outputs function
         # 3. Add here: foo.flakeModule
         ./lib
+        ./devshell.nix
+        ./pkgs/python-packages.nix
         inputs.flake-parts.flakeModules.easyOverlay
       ];
-      systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
-
+      systems = [
+        "aarch64-darwin"
+        # "aarch64-linux"
+        "x86_64-darwin"
+        "x86_64-linux"
+      ];
 
       # NOTE: This property is consumed by flake-parts.mkFlake to specify outputs of
       # the flake that are replicated for each supported system. Typically packages,
       # apps, and devshells are per system.
-      perSystem = { config, self', inputs', pkgs, system, ... }:
-      let
-        sppl = pkgs.callPackage ./pkgs/sppl {};
+      perSystem =
+        {
+          config,
+          self',
+          pkgs,
+          system,
+          ...
+        }:
+        let
+          ociImgBase = pkgs.callPackage ./pkgs/ociBase {
+            inherit nixpkgs;
+            basicTools = self.lib.basicTools;
+          };
 
-        ociImgBase = pkgs.callPackage ./pkgs/ociBase {
-          inherit nixpkgs;
-          basicTools = self.lib.basicTools;
+          packages = rec {
+            inherit ociImgBase;
+
+            inherit (self'.legacyPackages.python3Packages) loom sppl bayes3d;
+
+            loomOCI = pkgs.dockerTools.buildLayeredImage {
+              name = "probcomp/loom";
+              contents =
+                [ loom pkgs.bashInteractive ] ++
+                (self.lib.basicTools pkgs)
+              ;
+            };
+          };
+        in
+        {
+          _module.args.pkgs = import inputs.nixpkgs {
+            inherit system;
+            config = {
+              allowUnfree = true;
+              # Only enable CUDA on Linux
+              cudaSupport = (system == "x86_64-linux" || system == "aarch64-linux");
+            };
+            overlays = [
+              (_final: _prev: {
+                # This was added due to llvmPackages_10 requirement by Open3d
+                # and it having been removed from Nixpkgs.
+                inherit (inputs.nixpkgs-llvm-10.legacyPackages.${system}) llvmPackages_10;
+              })
+            ];
+          };
+
+          inherit packages;
+
+          checks = packages // {
+            devshellPython = self'.devShells.default;
+          };
         };
-
-        scopes = (self.lib.mkScopes {
-          inherit pkgs;
-          basicTools = self.lib.basicTools;
-        });
-        loom = scopes.callPy3Package ./pkgs/loom { };
-
-        packages = loom.more_packages // {
-          inherit
-            loom
-            sppl
-
-            ociImgBase
-          ;
-        };
-      in {
-        inherit packages;
-      };
 
       # NOTE: this property is consumed by flake-parts.mkFlake to define fields
       # of the flake that are NOT per system, such as generic `lib` code or other

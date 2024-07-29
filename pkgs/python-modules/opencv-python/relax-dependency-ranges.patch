@@ -1,0 +1,26 @@
+diff a/pyproject.toml b/pyproject.toml
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -6,8 +6,8 @@ requires = [
+   "numpy==1.17.5; python_version=='3.8' and platform_machine != 'aarch64' and platform_machine != 'arm64'",
+   "numpy==1.19.3; python_version<'3.9' and sys_platform == 'linux' and platform_machine == 'aarch64'",
+   "numpy==1.21.0; python_version<'3.9' and sys_platform == 'darwin' and platform_machine == 'arm64'",
++  "numpy>=1.21.0; python_version>'3.9'",
+-  "numpy>=2.0.0;  python_version>='3.9'",
+   "pip",
+   "scikit-build>=0.14.0",
+-  "setuptools==59.2.0",
++  "setuptools>=59.2.0",
+ ]
+ diff a/setup.py b/setup.py
+--- a/setup.py
++++ b/setup.py
+@@ -32,7 +32,7 @@ def main():
+         'numpy>=1.21.0; python_version<="3.9" and platform_system=="Darwin" and platform_machine=="arm64"',
+         'numpy>=1.21.4; python_version>="3.10" and platform_system=="Darwin"',
+         "numpy>=1.23.5; python_version>='3.11'",
+-        "numpy>=1.26.0; python_version>='3.12'"
++        "numpy>=1.26.0; python_version>='3.11'"
+     ]
+
+     python_version = cmaker.CMaker.get_python_version()
