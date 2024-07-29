@@ -1,5 +1,7 @@
-{ inputs }: final: _prev: {
-  # so we can pull from flake inputs
+# Python overlay that includes patches to upstream nixpkgs python.
+{ inputs }:
+final: _prev: {
+  # So we can pull from flake inputs
   inherit inputs;
 
   # Use the pre-built version of tensorflow

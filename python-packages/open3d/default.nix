@@ -1,40 +1,41 @@
-{ stdenv
-, lib
-, config
-, pkgs
-, fetchPypi
-, unzip
-, zip
-, cudaSupport ? config.cudaSupport
+{
+  stdenv,
+  lib,
+  config,
+  pkgs,
+  fetchPypi,
+  unzip,
+  zip,
+  cudaSupport ? config.cudaSupport,
 
-, autoPatchelfHook
-, python
-, tensorflow-bin
-, libusb
-, cudaPackages_11
-, buildPythonPackage
-, ipywidgets
-, matplotlib
-, numpy
-, pandas
-, plyfile
-, torch
-, pyyaml
-, scikitlearn
-, scipy
-, tqdm
-, plotly
-, dash
-, addict
+  autoPatchelfHook,
+  python,
+  tensorflow-bin,
+  libusb,
+  cudaPackages_11,
+  buildPythonPackage,
+  ipywidgets,
+  matplotlib,
+  numpy,
+  pandas,
+  plyfile,
+  torch,
+  pyyaml,
+  scikitlearn,
+  scipy,
+  tqdm,
+  plotly,
+  dash,
+  addict,
 
-, libGL
-, libglvnd
-, libdrm
-, expat
-, xorg
-, llvmPackages_10
-, buildEnv
-, runCommand
+  libGL,
+  libglvnd,
+  libdrm,
+  expat,
+  xorg,
+  llvmPackages_10,
+  buildEnv,
+  runCommand,
 }:
 let
   libllvm-wrapped =
@@ -108,32 +109,26 @@ buildPythonPackage {
     cd ../
   '';
 
-  nativeBuildInputs = [ ]
-  ++ (lib.optionals stdenv.isLinux [
-    autoPatchelfHook
-  ]);
+  nativeBuildInputs = [ ] ++ (lib.optionals stdenv.isLinux [ autoPatchelfHook ]);
 
-  buildInputs = [
-    # so deps
-    stdenv.cc.cc.lib
-    libusb.out
-    tensorflow-bin
-    libGL
-    libglvnd
-    expat
-    xorg.libXxf86vm
-    xorg.libXfixes
-    libllvm-wrapped
-    pkgs.mesa
-    pkgs.zstd
-    torch
-  ]
-  ++ (lib.optionals stdenv.isLinux [
-    libdrm
-  ])
-  ++ (lib.optionals cudaSupport [
-    cudaPackages_11.cudatoolkit.lib
-  ]);
+  buildInputs =
+    [
+      # so deps
+      stdenv.cc.cc.lib
+      libusb.out
+      tensorflow-bin
+      libGL
+      libglvnd
+      expat
+      xorg.libXxf86vm
+      xorg.libXfixes
+      libllvm-wrapped
+      pkgs.mesa
+      pkgs.zstd
+      torch
+    ]
+    ++ (lib.optionals stdenv.isLinux [ libdrm ])
+    ++ (lib.optionals cudaSupport [ cudaPackages_11.cudatoolkit.lib ]);
 
   propagatedBuildInputs = [
     # py deps
@@ -151,9 +146,7 @@ buildPythonPackage {
     addict
   ];
 
-  pythonImportsCheck = [
-    "open3d"
-  ];
+  pythonImportsCheck = [ "open3d" ];
 
   preFixup = ''
     echo "OUTPUT TO: $out"

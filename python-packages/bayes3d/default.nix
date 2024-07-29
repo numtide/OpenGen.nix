@@ -1,6 +1,5 @@
 {
   lib,
-  stdenv,
   config,
   fetchFromGitHub,
   buildPythonPackage,
@@ -63,9 +62,7 @@ buildPythonPackage rec {
     hash = "sha256-6AtxR8ZsByliDTQE/hEJs5+LKwdfS/sRGYXf+mgFHxw=";
   };
 
-  patches = [
-    ./optional-cuda.patch
-  ];
+  patches = [ ./optional-cuda.patch ];
 
   pyproject = true;
 
@@ -78,10 +75,7 @@ buildPythonPackage rec {
   buildInputs = [
     libglvnd
     libGLU
-  ]
-  ++ (lib.optionals cudaSupport [
-    cudaPackages_11.cudatoolkit.lib
-  ]);
+  ] ++ (lib.optionals cudaSupport [ cudaPackages_11.cudatoolkit.lib ]);
 
   propagatedBuildInputs = [
     distinctipy
@@ -103,9 +97,11 @@ buildPythonPackage rec {
     timm
   ];
 
-  preBuild = "" + (lib.optionalString cudaSupport ''
-    export CUDA_HOME=${cuda-native-redist}
-  '');
+  preBuild =
+    ""
+    + (lib.optionalString cudaSupport ''
+      export CUDA_HOME=${cuda-native-redist}
+    '');
 
   env.WITH_CUDA = if cudaSupport then "1" else "0";
 
