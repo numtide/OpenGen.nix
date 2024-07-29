@@ -41,9 +41,40 @@ To access the `lib` code exported by this flake, declare this repo as a flake in
 
 ## Packages
 
-### `.#sppl`
+List of Nix packages available in this repo.
 
-Python [library by ProbSys](https://github.com/probsys/sppl) packaged for python3.9 .
+### `.#baseOCI`
+
+#### `.#loomOCI`
+
+A Loom container image is also provided. It can be built and loaded into your local Docker registry with the following command:
+
+```console
+$ docker load -i $(nix build '.#loomOCI' --no-link --print-out-paths)
+```
+
+## Python Packages
+
+Here are all the python packages this flake provides, on top of all the ones
+available in nixpkgs.
+
+All the packages are compiled against Python 3.11.
+
+### `.#bayes3d`
+
+<https://github.com/probcomp/bayes3d>.
+
+### `.#distinctipy`
+
+### `.#distributions`
+
+Native library for probability distributions in python used by Loom. NOTE: this ONLY builds for `x86_64` architectures and only runs on linux.
+
+### `.#dm-tree`
+
+### `.#genjax`
+
+### `.#goftests`
 
 ### `.#loom`
 
@@ -52,26 +83,32 @@ platform-dependent `distributions`.
 
 Your options are:
 
-```bash
-nix build '.#packages.x86_64-linux.loom'                      # same as `.#loom` if that is your OS/arch
-nix build './envs-flake#packages.x86_64-darwin.ociImgLoom'
+```console
+$ nix build '.#packages.x86_64-linux.loom'                      # same as `.#loom` if that is your OS/arch
+$ nix build './envs-flake#packages.x86_64-darwin.ociImgLoom'
 ```
 
 If you are running on Mac silicon (`aarch64-darwin`), that OCI image will run but behavior is not defined or supported.
 
-#### `.#loom.morePackages.distributions`
+### `.#open3d`
 
-Native library for probability distributions in python used by Loom. NOTE: this ONLY builds for `x86_64` architectures and only runs on linux.
+### `.#opencv-python`
 
-#### `.#loom.morePackages.parsable`
-#### `.#loom.morePackages.pymetis`
-#### `.#loom.morePackages.goftests`
+### `.#orxy`
 
-Other upstream python packages required by Distributions and/or Loom.
+### `.#parsable`
 
-#### `.#loom.ociImg`
+### `.#plum-dispatch`
 
-A Loom container image is also provided as a passthru attribute of `loom`. It can be built and loaded into your local Docker registry with the following command:
-```sh
-docker load -i $(nix build 'github:OpenGen/nix/loom-oci-img-attribute#loom.ociImg' --no-link --print-out-paths)
-```
+### `.#pymetis`
+
+### `.#pyransac3d`
+
+### `.#sppl`
+
+Python [library by ProbSys](https://github.com/probsys/sppl) packaged for python3.9 .
+
+### `.#tensorflow-probability`
+
+### `.#loom`
+
