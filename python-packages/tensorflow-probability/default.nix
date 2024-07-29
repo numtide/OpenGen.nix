@@ -62,11 +62,11 @@ let
     LIBTOOL = lib.optionalString stdenv.isDarwin "${cctools}/bin/libtool";
 
     fetchAttrs = {
-      sha256 = if builtins.hasAttr stdenv.system fetchAttrsBySystem then
-        fetchAttrsBySystem.${stdenv.system}
-      else
-        throw "No hash for system"
-      ;
+      sha256 =
+        if builtins.hasAttr stdenv.system fetchAttrsBySystem then
+          fetchAttrsBySystem.${stdenv.system}
+        else
+          throw "No hash for system";
     };
 
     buildAttrs = {

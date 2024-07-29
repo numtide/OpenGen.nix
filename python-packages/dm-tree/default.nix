@@ -1,11 +1,11 @@
-
-{ autoPatchelfHook
-, buildPythonPackage
-, fetchPypi
-, python
-, isPy311
-, lib
-, stdenv
+{
+  autoPatchelfHook,
+  buildPythonPackage,
+  fetchPypi,
+  python,
+  isPy311,
+  lib,
+  stdenv,
 }:
 let
   prebuiltWheels = {
@@ -30,7 +30,7 @@ let
       hash = "sha256-N4zIrZPF/jWQ9AWjCZgHIfAhx5DKG9+bFbsdWdrsV/U=";
     };
   };
-  
+
   pyVersion = lib.versions.majorMinor python.version;
   srcInputs =
     prebuiltWheels."${pyVersion}-${stdenv.system}"
@@ -55,9 +55,7 @@ buildPythonPackage rec {
     format = "wheel";
   };
 
-  nativeBuildInputs = (lib.optionals stdenv.isLinux [
-    autoPatchelfHook
-  ]);
+  nativeBuildInputs = (lib.optionals stdenv.isLinux [ autoPatchelfHook ]);
 
   # Dynamic link dependencies
   buildInputs = [ stdenv.cc.cc ];
@@ -66,11 +64,13 @@ buildPythonPackage rec {
 
   meta = with lib; {
     description = "Tree is a library for working with nested data structures.";
-    homepage    = "https://github.com/deepmind/tree";
-    license     = licenses.asl20;
+    homepage = "https://github.com/deepmind/tree";
+    license = licenses.asl20;
     platforms = [
-      "aarch64-linux" "x86_64-linux"
-      "aarch64-darwin" "x86_64-darwin"
+      "aarch64-linux"
+      "x86_64-linux"
+      "aarch64-darwin"
+      "x86_64-darwin"
     ];
   };
 }

@@ -40,6 +40,7 @@
       # This flake is composed with the following files:
       imports = [
         ./parts/devshell.nix
+        ./parts/formatter.nix
         ./parts/lib.nix
         ./parts/pkgs.nix
         ./parts/python.nix
