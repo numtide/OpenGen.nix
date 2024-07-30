@@ -18,6 +18,8 @@
   matplotlib,
   numpy,
   pandas,
+  configargparse,
+  pyquaternion,
   plyfile,
   torch,
   pyyaml,
@@ -137,6 +139,8 @@ buildPythonPackage {
     pyyaml
     pandas
     plyfile
+    configargparse
+    pyquaternion
     scipy
     scikitlearn
     numpy
