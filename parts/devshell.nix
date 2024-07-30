@@ -6,6 +6,7 @@
       inherit (pkgs) lib config;
 
       devshellPython = self'.packages.python.withPackages (p: [
+        # Add your dependencies here.
         p.bayes3d
         p.jax
         p.jupyter
