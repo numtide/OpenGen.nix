@@ -9,6 +9,7 @@
         p.bayes3d
         p.jax
         p.jupyter
+        p.pip
         p.scipy
       ]);
 
@@ -29,6 +30,10 @@
           ${lib.optionalString config.cudaSupport cudaShellHook}
           export EXTRA_CCFLAGS="-I/usr/include"
           export B3D_ASSET_PATH="${self'.packages.python.pkgs.bayes3d.src}/assets"
+
+          # Create a virtualenv for pip escape hatches.
+          python -m venv .venv
+          source .venv/bin/activate
         '';
       };
 
